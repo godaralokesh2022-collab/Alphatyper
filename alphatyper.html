@@ -54,6 +54,11 @@
             font-weight: bold;
         }
         
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+        
         nav ul {
             display: flex;
             list-style: none;
@@ -105,6 +110,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         
         .ad-placeholder {
@@ -340,10 +346,10 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">Alpha Typer</div>
+                <div class="logo"><a href="index.html">Alpha Typer</a></div>
                 <nav>
                     <ul>
-                        <li><a href="#">Home</a></li>
+                        <li><a href="index.html">Home</a></li>
                         <li><a href="#">Levels</a></li>
                         <li><a href="#">Leaderboard</a></li>
                         <li><a href="#">About</a></li>
@@ -356,20 +362,34 @@
     <div class="container">
         <div class="main-content">
             <div class="sidebar">
-                <div class="ca-app-pub-1372288205805943/9452219347">
-                    <div class="ad-placeholder">
-                        <h3>Advertisement</h3>
-                        <p>Your ad could be here</p>
-                        <p>300x250</p>
-                    </div>
+                <div class="ad-container">
+                    <!-- Left Side Ad -->
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372288205805943"
+                             crossorigin="anonymous"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1372288205805943"
+                         data-ad-slot="2406969850"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </div>
                 
                 <div class="ad-container">
-                    <div class="ad-placeholder">
-                        <h3>Advertisement</h3>
-                        <p>Your ad could be here</p>
-                        <p>300x600</p>
-                    </div>
+                    <!-- Left Side Ad 2 -->
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372288205805943"
+                             crossorigin="anonymous"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1372288205805943"
+                         data-ad-slot="2406969850"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </div>
             </div>
 
@@ -438,19 +458,33 @@
 
             <div class="sidebar">
                 <div class="ad-container">
-                    <div class="ca-app-pub-1372288205805943/9452219347">
-                        <h3>Advertisement</h3>
-                        <p>Your ad could be here</p>
-                        <p>300x250</p>
-                    </div>
+                    <!-- Right Side Ad -->
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372288205805943"
+                             crossorigin="anonymous"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1372288205805943"
+                         data-ad-slot="9452219347"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </div>
                 
-                <div class="ca-app-pub-1372288205805943/9452219347">
-                    <div class="ad-placeholder">
-                        <h3>Advertisement</h3>
-                        <p>Your ad could be here</p>
-                        <p>300x600</p>
-                    </div>
+                <div class="ad-container">
+                    <!-- Right Side Ad 2 -->
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372288205805943"
+                             crossorigin="anonymous"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1372288205805943"
+                         data-ad-slot="9452219347"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
                 </div>
             </div>
         </div>
@@ -532,4 +566,206 @@
                 "M-theory unifies various superstring theories through an eleven-dimensional framework that incorporates branes and dualities.",
                 "The measurement problem in quantum mechanics concerns the transition from probabilistic superposition to definite measurement outcomes.",
                 "Modal realism controversially posits the concrete existence of all possible worlds rather than their mere conceptual possibility.",
-                "Category theory provides abstract stru
+                "Category theory provides abstract structural frameworks that unify mathematical concepts across diverse domains through morphisms and functors."
+            ]
+        };
+
+        // DOM elements
+        const textDisplay = document.getElementById('text-display');
+        const typingInput = document.getElementById('typing-input');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const tryAgainBtn = document.getElementById('try-again-btn');
+        const levelButtons = document.querySelectorAll('.level-btn');
+        const wpmElement = document.getElementById('wpm');
+        const timeElement = document.getElementById('time');
+        const accuracyElement = document.getElementById('accuracy');
+        const resultsElement = document.getElementById('results');
+        const resultWpm = document.getElementById('result-wpm');
+        const resultAccuracy = document.getElementById('result-accuracy');
+        const resultTime = document.getElementById('result-time');
+
+        // Test variables
+        let currentLevel = 'beginner';
+        let currentText = '';
+        let words = [];
+        let currentWordIndex = 0;
+        let startTime;
+        let timer;
+        let timeLeft = 60;
+        let correctChars = 0;
+        let totalChars = 0;
+        let testRunning = false;
+        let testCompleted = false;
+
+        // Initialize the test
+        function initTest() {
+            // Get random text for current level
+            const randomIndex = Math.floor(Math.random() * sentences[currentLevel].length);
+            currentText = sentences[currentLevel][randomIndex];
+            words = currentText.split(' ');
+            
+            // Display the text with formatting
+            displayText();
+            
+            // Reset stats
+            currentWordIndex = 0;
+            timeLeft = 60;
+            correctChars = 0;
+            totalChars = 0;
+            testRunning = false;
+            testCompleted = false;
+            
+            // Update UI
+            wpmElement.textContent = '0';
+            timeElement.textContent = timeLeft;
+            accuracyElement.textContent = '100%';
+            typingInput.value = '';
+            typingInput.disabled = false;
+            resultsElement.style.display = 'none';
+            startBtn.textContent = 'Start Test';
+            startBtn.disabled = false;
+            
+            // Clear any existing timer
+            clearInterval(timer);
+        }
+
+        // Display the text with proper formatting
+        function displayText() {
+            let html = '';
+            
+            words.forEach((word, index) => {
+                if (index === currentWordIndex) {
+                    html += `<span class="current-word">${word}</span> `;
+                } else if (index < currentWordIndex) {
+                    html += `<span class="correct">${word}</span> `;
+                } else {
+                    html += `<span>${word}</span> `;
+                }
+            });
+            
+            textDisplay.innerHTML = html;
+        }
+
+        // Start the test
+        function startTest() {
+            if (testRunning) return;
+            
+            testRunning = true;
+            startTime = new Date();
+            startBtn.textContent = 'Test Running...';
+            startBtn.disabled = true;
+            typingInput.focus();
+            
+            // Start timer
+            timer = setInterval(updateTimer, 1000);
+        }
+
+        // Update the timer
+        function updateTimer() {
+            timeLeft--;
+            timeElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                endTest();
+            }
+        }
+
+        // Calculate WPM
+        function calculateWPM() {
+            const timeElapsed = (60 - timeLeft) / 60; // in minutes
+            const wordsTyped = currentWordIndex;
+            return Math.round(wordsTyped / timeElapsed);
+        }
+
+        // Calculate accuracy
+        function calculateAccuracy() {
+            if (totalChars === 0) return 100;
+            return Math.round((correctChars / totalChars) * 100);
+        }
+
+        // End the test
+        function endTest() {
+            testRunning = false;
+            testCompleted = true;
+            clearInterval(timer);
+            
+            const wpm = calculateWPM();
+            const accuracy = calculateAccuracy();
+            
+            // Update results
+            resultWpm.textContent = wpm;
+            resultAccuracy.textContent = `${accuracy}%`;
+            resultTime.textContent = `${60 - timeLeft}s`;
+            
+            // Show results
+            resultsElement.style.display = 'block';
+            
+            // Disable typing input
+            typingInput.disabled = true;
+        }
+
+        // Handle typing input
+        typingInput.addEventListener('input', (e) => {
+            if (!testRunning) return;
+            
+            const typedValue = e.target.value;
+            const currentWord = words[currentWordIndex];
+            
+            // Check if space was pressed (word completed)
+            if (typedValue.endsWith(' ')) {
+                // Check if word was typed correctly
+                if (typedValue.trim() === currentWord) {
+                    correctChars += currentWord.length;
+                }
+                
+                totalChars += currentWord.length;
+                
+                // Move to next word
+                currentWordIndex++;
+                e.target.value = '';
+                
+                // Update displayed text
+                displayText();
+                
+                // Check if all words are completed
+                if (currentWordIndex >= words.length) {
+                    // Get new text for the same level
+                    const randomIndex = Math.floor(Math.random() * sentences[currentLevel].length);
+                    currentText = sentences[currentLevel][randomIndex];
+                    words = currentText.split(' ');
+                    currentWordIndex = 0;
+                    displayText();
+                }
+            }
+            
+            // Update WPM and accuracy in real-time
+            if (testRunning) {
+                const wpm = calculateWPM();
+                const accuracy = calculateAccuracy();
+                
+                wpmElement.textContent = wpm;
+                accuracyElement.textContent = `${accuracy}%`;
+            }
+        });
+
+        // Event listeners
+        startBtn.addEventListener('click', startTest);
+        resetBtn.addEventListener('click', initTest);
+        tryAgainBtn.addEventListener('click', initTest);
+
+        // Level selection
+        levelButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                levelButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentLevel = button.getAttribute('data-level');
+                initTest();
+            });
+        });
+
+        // Initialize the test on page load
+        document.addEventListener('DOMContentLoaded', initTest);
+    </script>
+</body>
+</html>
