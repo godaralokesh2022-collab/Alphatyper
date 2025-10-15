@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Typer - Improve Your Typing Speed</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cbc;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --correct-color: #d4edda;
+            --incorrect-color: #f8d7da;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .main-content {
+            display: flex;
+            margin: 2rem 0;
+            gap: 2rem;
+        }
+        
+        .content-area {
+            flex: 3;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .ad-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-placeholder {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .level-selector {
+            margin-bottom: 2rem;
+        }
+        
+        .level-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .level-btn {
+            padding: 0.5rem 1rem;
+            background: var(--light-color);
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .level-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .level-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .typing-test-area {
+            margin: 2rem 0;
+        }
+        
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .stat-box {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .text-display {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            min-height: 150px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .current-word {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+        
+        .correct {
+            color: var(--success-color);
+        }
+        
+        .incorrect {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        .typing-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .typing-input:focus {
+            border-color: var(--primary-color);
+        }
+        
+        .test-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background: var(--light-color);
+            color: var(--dark-color);
+            border: 1px solid #dee2e6;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .results {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--light-color);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .results h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .result-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+        }
+        
+        .result-stat {
+            text-align: center;
+        }
+        
+        .result-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .progress-ring {
+            margin: 0 auto;
+        }
+        
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .level-buttons {
+                justify-content: center;
+            }
+            
+            .test-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Alpha Typer</div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Levels</a></li>
+                        <li><a href="#">Leaderboard</a></li>
+                        <li><a href="#">About</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="ad-container">
+                    <div class="ad-placeholder">
+                        <h3>Advertisement</h3>
+                        <p>Your ad could be here</p>
+                        <p>300x250</p>
+                    </div>
+                </div>
+                
+                <div class="ad-container">
+                    <div class="ad-placeholder">
+                        <h3>Advertisement</h3>
+                        <p>Your ad could be here</p>
+                        <p>300x600</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="level-selector">
+                    <h2>Select Your Level</h2>
+                    <div class="level-buttons">
+                        <button class="level-btn active" data-level="beginner">Beginner</button>
+                        <button class="level-btn" data-level="intermediate">Intermediate</button>
+                        <button class="level-btn" data-level="advanced">Advanced</button>
+                        <button class="level-btn" data-level="expert">Expert</button>
+                        <button class="level-btn" data-level="master">Master</button>
+                    </div>
+                </div>
+
+                <div class="typing-test-area">
+                    <div class="test-header">
+                        <h2>Typing Test</h2>
+                        <div class="stats">
+                            <div class="stat-box">
+                                <div class="stat-value" id="wpm">0</div>
+                                <div class="stat-label">WPM</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="time">60</div>
+                                <div class="stat-label">Seconds</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="accuracy">100%</div>
+                                <div class="stat-label">Accuracy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-display" id="text-display">
+                        <!-- Text will be loaded here -->
+                    </div>
+
+                    <input type="text" class="typing-input" id="typing-input" placeholder="Start typing here...">
+
+                    <div class="test-controls">
+                        <button class="btn btn-secondary" id="reset-btn">Reset Test</button>
+                        <button class="btn btn-primary" id="start-btn">Start Test</button>
+                    </div>
+
+                    <div class="results" id="results">
+                        <h3>Test Completed!</h3>
+                        <div class="result-stats">
+                            <div class="result-stat">
+                                <div class="result-value" id="result-wpm">0</div>
+                                <div class="result-label">WPM</div>
+                            </div>
+                            <div class="result-stat">
+                                <div class="result-value" id="result-accuracy">0%</div>
+                                <div class="result-label">Accuracy</div>
+                            </div>
+                            <div class="result-stat">
+                                <div class="result-value" id="result-time">0s</div>
+                                <div class="result-label">Time</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="try-again-btn">Try Again</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="ad-container">
+                    <div class="ad-placeholder">
+                        <h3>Advertisement</h3>
+                        <p>Your ad could be here</p>
+                        <p>300x250</p>
+                    </div>
+                </div>
+                
+                <div class="ad-container">
+                    <div class="ad-placeholder">
+                        <h3>Advertisement</h3>
+                        <p>Your ad could be here</p>
+                        <p>300x600</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="copyright">
+                    &copy; 2023 Alpha Typer. All rights reserved.
+                </div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample sentences for different levels
+        const sentences = {
+            beginner: [
+                "The quick brown fox jumps over the lazy dog.",
+                "I love to code and build amazing websites.",
+                "Practice makes perfect when learning to type.",
+                "The sun is shining brightly in the blue sky.",
+                "My favorite hobby is reading interesting books.",
+                "Coding is a valuable skill in today's world.",
+                "I enjoy walking in the park on sunny days.",
+                "Learning new things keeps our minds active.",
+                "The cat is sleeping on the comfortable sofa.",
+                "Good food and exercise are important for health."
+            ],
+            intermediate: [
+                "JavaScript is a versatile programming language used for web development.",
+                "The entrepreneur invested in renewable energy solutions for a sustainable future.",
+                "Effective communication skills are essential in professional environments.",
+                "Modern technology has revolutionized how we access information globally.",
+                "Critical thinking enables individuals to analyze complex problems systematically.",
+                "The conference focused on innovative approaches to digital marketing strategies.",
+                "Environmental conservation requires collective effort from all stakeholders.",
+                "Financial literacy empowers people to make informed economic decisions.",
+                "Artificial intelligence is transforming various industries worldwide.",
+                "Project management involves coordinating resources to achieve specific goals."
+            ],
+            advanced: [
+                "Quantum computing represents a paradigm shift in computational capabilities, potentially solving problems intractable for classical computers.",
+                "The interdisciplinary nature of cognitive science integrates psychology, neuroscience, linguistics, and computer science to understand mental processes.",
+                "Epistemological frameworks underpin our understanding of knowledge acquisition and validation across different philosophical traditions.",
+                "Biotechnological advancements in CRISPR gene editing have revolutionized genetic engineering with profound ethical implications.",
+                "Macroeconomic policies must balance inflation control with sustainable growth while considering global financial interdependencies.",
+                "Postmodern literary criticism deconstructs traditional narrative structures and challenges established canonical hierarchies.",
+                "Neuroplasticity research demonstrates the brain's remarkable capacity to reorganize neural pathways throughout the human lifespan.",
+                "Sustainable urban planning integrates green infrastructure with transportation systems to reduce environmental impact.",
+                "Cryptographic protocols ensure data security through complex mathematical algorithms that resist computational attacks.",
+                "The anthropic principle in cosmology examines how universal constants appear finely tuned to permit conscious observation."
+            ],
+            expert: [
+                "Phenomenological reduction, or epoché, involves bracketing presuppositions to examine conscious experience without ontological commitments.",
+                "The Heisenberg uncertainty principle fundamentally limits simultaneous precision in measuring complementary quantum properties.",
+                "Non-Euclidean geometries challenged Kantian notions of a priori spatial intuition, revolutionizing mathematical epistemology.",
+                "Deontological ethics prioritizes moral duties over consequentialist calculations, as articulated in Kant's categorical imperative.",
+                "Poststructuralist theorists problematize binary oppositions and fixed meanings through différance and discursive analysis.",
+                "The Riemann hypothesis, concerning the distribution of prime numbers, remains among mathematics' most consequential unsolved problems.",
+                "Transcendental idealism posits that space and time are forms of sensible intuition rather than properties of things-in-themselves.",
+                "Superstring theory attempts to reconcile general relativity with quantum mechanics through multidimensional vibrational entities.",
+                "Hermeneutic circles describe the iterative process where understanding emerges from the interplay between parts and wholes.",
+                "Gödel's incompleteness theorems demonstrate formal systems' inherent limitations in proving their own consistency."
+            ],
+            master: [
+                "The ontological argument for God's existence, while subject to Kant's critique of treating existence as a predicate, continues to engage contemporary analytic philosophers.",
+                "Quantum decoherence explains the apparent collapse of wave functions through environmental interaction without invoking conscious observation.",
+                "The Hard Problem of Consciousness, articulated by Chalmers, distinguishes qualitative experience from functional explanations of cognition.",
+                "Derridean deconstruction reveals how metaphysical presuppositions inevitably inhabit even the most rigorous philosophical systems.",
+                "The P versus NP problem, central to computational complexity theory, questions whether verification implies efficient solvability.",
+                "Transcendental arguments attempt to establish necessary conditions for the possibility of experience or conceptual frameworks.",
+                "M-theory unifies various superstring theories through an eleven-dimensional framework that incorporates branes and dualities.",
+                "The measurement problem in quantum mechanics concerns the transition from probabilistic superposition to definite measurement outcomes.",
+                "Modal realism controversially posits the concrete existence of all possible worlds rather than their mere conceptual possibility.",
+                "Category theory provides abstract stru
